@@ -8,7 +8,6 @@ let endpoint = `https://cors-anywhere.herokuapp.com/http://${ip}:80`;
 
 if(window.location.href.startsWith('http://localhost:')) {
     endpoint = 'http://localhost:80'
-
 }
 
 function farsi(input) {
@@ -16,7 +15,7 @@ function farsi(input) {
         .arabicChar().englishNumber().arabicNumber().halfSpace().toString();
 }
 
-async function get_all_symbols() {
+async function get_all_assets() {
     const resp = await fetch(`${endpoint}/assets`);
     const assets = await resp.json()
     for (let asset of assets) {
@@ -32,7 +31,7 @@ async function get_all_symbols() {
     window.assets = assets;
     return assets;
 }
-const symbolsCache = get_all_symbols();
+const assetsCache = get_all_assets();
 
 const configurationData = {
     supported_resolutions: ['1D', '1W', '1M'],
@@ -43,10 +42,10 @@ const configurationData = {
 export default {
     onReady: async (callback) => {
         console.log('[onReady]: Method call');
-        const symbols = await symbolsCache;
-        const exchanges = [... new Set(symbols.map(s => s.exchange))].sort()
+        const assets = await assetsCache;
+        const exchanges = [... new Set(assets.map(s => s.exchange))].sort()
             .map(e => ({ name: e, description: e, value: e }));
-        const sybmol_types = [... new Set(symbols.map(s => s.type))]
+        const sybmol_types = [... new Set(assets.map(s => s.type))]
             .map(t => ({ name: t, value: t }));
         configurationData.exchanges = exchanges;
         callback(configurationData);
@@ -58,8 +57,8 @@ export default {
         symbolType,
         onResultReadyCallback,
     ) => {
-        const symbols = await symbolsCache;
-        const newSymbols = symbols.filter(asset => {
+        const assets = await assetsCache;
+        const newAssets = assets.filter(asset => {
             userInput = userInput && farsi(userInput);
             return !userInput ||
                 asset.description.indexOf(userInput) !== -1 ||
@@ -67,12 +66,12 @@ export default {
                 asset.type.indexOf(userInput) !== -1;
         });
         const cmp = (a, b) => a < b ? -1 : a > b ? +1 : 0;
-        newSymbols.sort((a, b) => {
+        newAssets.sort((a, b) => {
             if (a.exchange === exchange) { return -1; }
             if (b.exchange === exchange) { return +1; }
             return cmp(a.exchange, b.exchange) || cmp(a.symbol, b.symbol);
         });
-        onResultReadyCallback(newSymbols);
+        onResultReadyCallback(newAssets);
     },
 
     resolveSymbol: async (
@@ -80,8 +79,8 @@ export default {
         onSymbolResolvedCallback,
         onResolveErrorCallback,
     ) => {
-        const symbols = await symbolsCache;
-        const asset = symbols.find(
+        const assets = await assetsCache;
+        const asset = assets.find(
             ({ full_name }) => full_name === symbolName
         );
 
@@ -108,7 +107,6 @@ export default {
             data_status: 'streaming',
         };
 
-        window.symbolInfo = symbolInfo;
         onSymbolResolvedCallback(symbolInfo);
     },
 
