@@ -1,4 +1,5 @@
 import persianJs from './persian.min.js';
+import jalaali from './jalali.js';
 const lastBarsCache = new Map();
 
 // current public ip address - needs to be made static.
@@ -9,6 +10,38 @@ let endpoint = `https://cors-anywhere.herokuapp.com/http://${ip}:80`;
 if(window.location.href.startsWith('http://localhost:')) {
     endpoint = 'http://localhost:80'
 }
+
+// chart time series are in gregorian format
+// we need a 1-to-1 mapping to jalai.
+function date_fa_to_en({jy, jm, jd}) {
+    let {gy, gm, gd} = jalaali.toGregorian(jy, jm, 1);
+    // because stock market is closed on friday
+    // we can safely ignore it.
+    let k = new Date(Date.UTC(gy, gm - 1, gd)).getDay();
+    k = (6 - k) || 7; // the first friday in the month
+
+    if(jd > k) {
+        jd -=  Math.floor((jd-k)/7) + 1;
+    }
+    jy += 600;
+    return new Date(Date.UTC(jy, jm - 1, jd));
+}
+function date_en_to_fa(date) {
+    let jy = date.getUTCFullYear() - 600;
+    let jm = date.getUTCMonth() + 1;
+    let jd = date.getUTCDate();
+
+    let {gy, gm, gd} = jalaali.toGregorian(jy, jm, 1);
+    let k = new Date(Date.UTC(gy, gm - 1, gd)).getDay();
+    k = (6 - k) || 7; // the first friday in the month
+    if(jd >= k) {
+        jd += Math.floor((jd - k) / 6) + 1;
+    }
+    return {jy, jm, jd};
+}
+
+window.date_fa_to_en = date_fa_to_en;
+window.date_en_to_fa = date_en_to_fa;
 
 function farsi(input) {
     return persianJs(input)
@@ -117,7 +150,10 @@ export default {
         try {
             const bars = await resp.json();
             for (let bar of bars) {
-                bar.time = Date.parse(bar.date_en);
+                let [jy, jm, jd] = bar.date_fa.split('/');
+                bar._time = bar.time = date_fa_to_en({
+                    jy: +jy, jm: +jm, jd: +jd
+                });
             }
             onHistoryCallback(
                 bars, { noData: bars.length === 0 }

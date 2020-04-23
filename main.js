@@ -1,6 +1,7 @@
 /// <reference path="./charting_library/charting_library.min.d.ts" />
 
 import Datafeed from './datafeed.js';
+import jalaali from './jalali.js';
 const localhost = window.location.href.startsWith('http://localhost:');
 
 window.tvWidget = new TradingView.widget({
@@ -28,12 +29,8 @@ window.tvWidget = new TradingView.widget({
         },
         dateFormatter: {
             format: (e) => {
-                return e.toLocaleDateString('fa-IR', {
-                        weekday: 'long',
-                        year: 'numeric',
-                        month: 'numeric',
-                        day: 'numeric'
-                    });
+                const {jy, jm, jd} = date_en_to_fa(e);
+                return `${jy}/${jm}/${jd}`;
             }
         }
     },
