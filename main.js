@@ -1,5 +1,7 @@
-// Datafeed implementation, will be added later
+/// <reference path="./charting_library/charting_library.min.d.ts" />
+
 import Datafeed from './datafeed.js';
+const localhost = window.location.href.startsWith('http://localhost:');
 
 window.tvWidget = new TradingView.widget({
     symbol: 'فرابورس-بازاردوم:ذوب',
@@ -9,17 +11,9 @@ window.tvWidget = new TradingView.widget({
     library_path: '../charting_library/',
     timezone: 'Asia/Tehran',
     datafeed: Datafeed,
-    disabled_features: ['use_localstorage_for_settings'], // TODO: only for debugging
+    disabled_features: localhost ? ['use_localstorage_for_settings'] : [],
     locale: 'fa',
-    overrides: {
-        // "paneProperties.background": "#131722",
-        // "paneProperties.vertGridProperties.color": "#363c4e",
-        // "paneProperties.horzGridProperties.color": "#363c4e",
-        // "symbolWatermarkProperties.transparency": 90,
-        // "scalesProperties.textColor": "#AAA",
-        // "mainSeriesProperties.candleStyle.wickUpColor": '#336854',
-        // "mainSeriesProperties.candleStyle.wickDownColor": '#7f323f',
-    },
+    // https://github.com/mmmy/css3demos/wiki/Overrides
     customFormatters: {
         timeFormatter: {
             format: (e) => {

@@ -80,9 +80,10 @@ export default {
         onResolveErrorCallback,
     ) => {
         const assets = await assetsCache;
-        const asset = assets.find(
-            ({ full_name }) => full_name === symbolName
-        );
+        window.symbolName = symbolName;
+        const asset = assets.find(({ full_name, symbol }) => {
+            return full_name === symbolName || symbol === symbolName;
+        });
 
         if (!asset) {
             console.log('[resolveSymbol]: Cannot resolve symbol', symbolName);
