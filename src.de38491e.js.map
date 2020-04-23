@@ -1,1 +1,0 @@
-{"version":3,"sources":["src/index.js"],"names":["console","warn"],"mappings":";;;AAEA,aAFA,QAAA,sBAEAA,QAAQC,KAAK","file":"src.de38491e.js","sourceRoot":"..","sourcesContent":["import '../style/main.scss';\n\nconsole.warn('hello wordl!');"]}
