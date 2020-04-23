@@ -2,14 +2,24 @@
 import Datafeed from './datafeed.js';
 
 window.tvWidget = new TradingView.widget({
-    symbol: 'فرابورس-بازاردوم:ذوب', // default symbol
-    interval: '1D', // default interval
-    fullscreen: true, // displays the chart in the fullscreen mode
+    symbol: 'فرابورس-بازاردوم:ذوب',
+    interval: '1D',
+    fullscreen: true,
     container_id: 'tv_chart_container',
+    library_path: '../charting_library/',
     timezone: 'Asia/Tehran',
     datafeed: Datafeed,
+    disabled_features: ['use_localstorage_for_settings'], // TODO: only for debugging
     locale: 'fa',
-    library_path: '../charting_library/',
+    overrides: {
+        // "paneProperties.background": "#131722",
+        // "paneProperties.vertGridProperties.color": "#363c4e",
+        // "paneProperties.horzGridProperties.color": "#363c4e",
+        // "symbolWatermarkProperties.transparency": 90,
+        // "scalesProperties.textColor": "#AAA",
+        // "mainSeriesProperties.candleStyle.wickUpColor": '#336854',
+        // "mainSeriesProperties.candleStyle.wickDownColor": '#7f323f',
+    },
     customFormatters: {
         timeFormatter: {
             format: (e) => {
