@@ -101,7 +101,7 @@ export default {
             minmov: 1,
             pricescale: 100,
             has_intraday: false,
-            has_no_volume: true,
+            // has_no_volume: true,
             has_weekly_and_monthly: false,
             supported_resolutions: configurationData.supported_resolutions,
             volume_precision: 2,
