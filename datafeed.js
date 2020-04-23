@@ -1,9 +1,12 @@
 const lastBarsCache = new Map();
-const ip = '202.185.36.83';
 
+// current public ip address - needs to be made static.
+const ip = '202.185.36.83';
+// for more info see https://cors-anywhere.herokuapp.com/http://api.catphotos.io/
+const endpoint = `https://cors-anywhere.herokuapp.com/http://${ip}:80`;
 
 async function get_all_symbols() {
-    const resp = await fetch(`http://${ip}:80/assets`);
+    const resp = await fetch(`${endpoint}/assets`);
     const assets = await resp.json()
     for (let asset of assets) {
         asset.description = asset.name;
@@ -94,7 +97,7 @@ export default {
 
     getBars: async (symbolInfo, resolution, from, to, onHistoryCallback, onErrorCallback, firstDataRequest) => {
         const symbol = symbolInfo.ticker;
-        const resp = await fetch(`http://${ip}:80/bars/${symbol}/${resolution}/${from}/${to}`);
+        const resp = await fetch(`${endpoint}/bars/${symbol}/${resolution}/${from}/${to}`);
 
         try {
             const bars = await resp.json();
