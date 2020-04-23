@@ -1,14 +1,31 @@
+import persianJs from './persian.min.js';
 const lastBarsCache = new Map();
 
 // current public ip address - needs to be made static.
 const ip = '202.185.36.83';
 // for more info see https://cors-anywhere.herokuapp.com/http://api.catphotos.io/
-const endpoint = `https://cors-anywhere.herokuapp.com/http://${ip}:80`;
+let endpoint = `https://cors-anywhere.herokuapp.com/http://${ip}:80`;
+
+if(window.location.href.startsWith('http://localhost:')) {
+    endpoint = 'http://localhost:80'
+
+}
+
+function farsi(input) {
+    return persianJs(input)
+        .arabicChar().englishNumber().arabicNumber().halfSpace().toString();
+}
 
 async function get_all_symbols() {
     const resp = await fetch(`${endpoint}/assets`);
     const assets = await resp.json()
     for (let asset of assets) {
+        asset.the_symbol = asset.symbol; // orginal symbol, used to send rest api's.
+        asset.symbol = farsi(asset.symbol);
+        asset.name = farsi(asset.name);
+        asset.exchange = farsi(asset.exchange);
+        asset.type = farsi(asset.type);
+
         asset.description = asset.name;
         asset.full_name = `${asset.exchange}:${asset.symbol}`;
     }
@@ -41,14 +58,13 @@ export default {
         symbolType,
         onResultReadyCallback,
     ) => {
-        console.log('[searchSymbols]: Method call');
         const symbols = await symbolsCache;
-        const newSymbols = symbols.filter(symbol => {
-            userInput = userInput.toLowerCase();
+        const newSymbols = symbols.filter(asset => {
+            userInput = userInput && farsi(userInput);
             return !userInput ||
-                symbol.description.indexOf(userInput) !== -1 ||
-                symbol.symbol.indexOf(userInput) !== -1 ||
-                symbol.type.indexOf(userInput) !== -1;
+                asset.description.indexOf(userInput) !== -1 ||
+                asset.symbol.indexOf(userInput) !== -1 ||
+                asset.type.indexOf(userInput) !== -1;
         });
         const cmp = (a, b) => a < b ? -1 : a > b ? +1 : 0;
         newSymbols.sort((a, b) => {
@@ -65,22 +81,23 @@ export default {
         onResolveErrorCallback,
     ) => {
         const symbols = await symbolsCache;
-        const symbolItem = symbols.find(
+        const asset = symbols.find(
             ({ full_name }) => full_name === symbolName
         );
 
-        if (!symbolItem) {
+        if (!asset) {
             console.log('[resolveSymbol]: Cannot resolve symbol', symbolName);
             onResolveErrorCallback('cannot resolve symbol');
             return;
         }
         const symbolInfo = {
-            name: symbolItem.symbol,
-            description: symbolItem.description,
-            type: symbolItem.type,
+            name: asset.symbol,
+            description: asset.description,
+            type: asset.type,
             session: '24x7',
             timezone: 'Asia/Tehran',
-            exchange: symbolItem.exchange,
+            exchange: asset.exchange,
+            the_symbol: asset.the_symbol,
             minmov: 1,
             pricescale: 100,
             has_intraday: false,
@@ -96,8 +113,8 @@ export default {
     },
 
     getBars: async (symbolInfo, resolution, from, to, onHistoryCallback, onErrorCallback, firstDataRequest) => {
-        const symbol = symbolInfo.ticker;
-        const resp = await fetch(`${endpoint}/bars/${symbol}/${resolution}/${from}/${to}`);
+        const the_symbol = symbolInfo.the_symbol;
+        const resp = await fetch(`${endpoint}/bars/${the_symbol}/${resolution}/${from}/${to}`);
 
         try {
             const bars = await resp.json();
