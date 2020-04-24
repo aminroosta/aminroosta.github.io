@@ -13,7 +13,8 @@ if(window.location.href.startsWith('http://localhost:')) {
 
 // chart time series are in gregorian format
 // we need a 1-to-1 mapping to jalai.
-function date_fa_to_en({jy, jm, jd}) {
+window.encript_jalali =
+function encript_jalali({jy, jm, jd}) {
     let {gy, gm, gd} = jalaali.toGregorian(jy, jm, 1);
     // because stock market is closed on friday
     // we can safely ignore it.
@@ -23,11 +24,11 @@ function date_fa_to_en({jy, jm, jd}) {
     if(jd > k) {
         jd -=  Math.floor((jd-k)/7) + 1;
     }
-    jy += 600;
     return new Date(Date.UTC(jy, jm - 1, jd));
 }
-function date_en_to_fa(date) {
-    let jy = date.getUTCFullYear() - 600;
+window.decript_jalali =
+function decript_jalali(date) {
+    let jy = date.getUTCFullYear();
     let jm = date.getUTCMonth() + 1;
     let jd = date.getUTCDate();
 
@@ -40,8 +41,17 @@ function date_en_to_fa(date) {
     return {jy, jm, jd};
 }
 
-window.date_fa_to_en = date_fa_to_en;
-window.date_en_to_fa = date_en_to_fa;
+function decript_epoch(epoch) {
+    // negative numbers are before 1970
+    // fortunately all persian years (1399) are before that.
+    if(epoch < 0) {
+        const {jy, jm, jd} = decript_jalali(new Date(epoch * 1000));
+        const {gy, gm, gd} = jalaali.toGregorian(jy, jm, jd);
+        return new Date(Date.UTC(gy, gm, gd)).getTime() / 1000;
+    }
+    return epoch;
+}
+
 
 function farsi(input) {
     return persianJs(input)
@@ -144,6 +154,8 @@ export default {
     },
 
     getBars: async (symbolInfo, resolution, from, to, onHistoryCallback, onErrorCallback, firstDataRequest) => {
+        from = decript_epoch(from);
+        to = decript_epoch(to);
         const the_symbol = symbolInfo.the_symbol;
         const resp = await fetch(`${endpoint}/bars/${the_symbol}/${resolution}/${from}/${to}`);
 
@@ -151,7 +163,7 @@ export default {
             const bars = await resp.json();
             for (let bar of bars) {
                 let [jy, jm, jd] = bar.date_fa.split('/');
-                bar._time = bar.time = date_fa_to_en({
+                bar.time = encript_jalali({
                     jy: +jy, jm: +jm, jd: +jd
                 });
             }

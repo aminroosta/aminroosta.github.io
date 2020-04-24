@@ -4,9 +4,6 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <script>
-      parent.date_en_to_fa(
-        parent.date_fa_to_en({jy:1399, jm: 12, jd: 3})
-      )
       const months = [
         "فروردين",
         "ارديبهشت",
@@ -22,7 +19,7 @@
         "اسفند"
       ];
       window.patch_farsi_dates = function(e, t) {
-        const {jy, jm, jd} = parent.date_en_to_fa(t);
+        const {jy, jm, jd} = parent.decript_jalali(t);
         if (e === 70) { return jy; }
         if (e === 60) { return months[jm-1]; }
         if (e === 50) { return jd; }

@@ -29,7 +29,7 @@ window.tvWidget = new TradingView.widget({
         },
         dateFormatter: {
             format: (e) => {
-                const {jy, jm, jd} = date_en_to_fa(e);
+                const {jy, jm, jd} = decript_jalali(e);
                 return `${jy}/${jm}/${jd}`;
             }
         }
