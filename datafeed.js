@@ -1,4 +1,4 @@
-import persianJs from './persian.min.js';
+import persianJs from './persian.js';
 import jalaali from './jalali.js';
 const lastBarsCache = new Map();
 
