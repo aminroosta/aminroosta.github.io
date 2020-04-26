@@ -12,7 +12,7 @@ window.tvWidget = new TradingView.widget({
     library_path: '../charting_library/',
     timezone: 'Asia/Tehran',
     datafeed: Datafeed,
-    disabled_features: localhost ? ['use_localstorage_for_settings'] : [],
+    // disabled_features: localhost ? ['use_localstorage_for_settings'] : [],
     locale: 'fa',
     // https://github.com/mmmy/css3demos/wiki/Overrides
     customFormatters: {

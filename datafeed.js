@@ -159,6 +159,10 @@ export default {
     getBars: async (symbolInfo, resolution, from, to, onHistoryCallback, onErrorCallback, firstDataRequest) => {
         from = decript_epoch(from);
         to = decript_epoch(to);
+        if(firstDataRequest) {
+            // TODO: figure out why timezone is messing up.
+            to += 24 * 3600;
+        }
         const the_symbol = symbolInfo.the_symbol;
         const resp = await fetch(`${endpoint}/bars/${the_symbol}/${resolution}/${from}/${to}`);
 
