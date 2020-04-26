@@ -6,13 +6,13 @@ const lastBarsCache = new Map();
 const ip = '202.185.172.27';
 
 // for more info see https://cors-anywhere.herokuapp.com/http://api.catphotos.io/
-let endpoint = `https://cors-anywhere.herokuapp.com/http://${ip}:80`;
+let endpoint = `http://${ip}:80`;
 
 // let endpoint = `http://${ip}:80`;
 
-if(window.location.href.startsWith('http://localhost:')) {
-    endpoint = 'http://localhost:80'
-}
+// if(window.location.href.startsWith('http://localhost:')) {
+//     endpoint = 'http://localhost:80'
+// }
 
 // chart time series are in gregorian format
 // we need a 1-to-1 mapping to jalai.
