@@ -1,8 +1,6 @@
 /// <reference path="./charting_library/charting_library.min.d.ts" />
 
 import Datafeed from './datafeed.js';
-import jalaali from './jalali.js';
-const localhost = window.location.href.startsWith('http://localhost:');
 
 window.tvWidget = new TradingView.widget({
     symbol: 'فرابورس-بازاردوم:ذوب',
@@ -12,7 +10,7 @@ window.tvWidget = new TradingView.widget({
     library_path: '../charting_library/',
     timezone: 'Asia/Tehran',
     datafeed: Datafeed,
-    // disabled_features: localhost ? ['use_localstorage_for_settings'] : [],
+    disabled_features: [],
     locale: 'fa',
     // https://github.com/mmmy/css3demos/wiki/Overrides
     customFormatters: {

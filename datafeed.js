@@ -82,6 +82,10 @@ const configurationData = {
     symbols_types: [],
 };
 
+const socket = io('http://localhost');
+
+const subscrptionMap = {};
+
 export default {
     onReady: async (callback) => {
         console.log('[onReady]: Method call');
@@ -192,9 +196,19 @@ export default {
         symbolInfo,
         resolution,
         onRealtimeCallback,
-        subscribeUID,
+        subscriberUID,
         onResetCacheNeededCallback,
     ) => {
+        const symbol = symbolInfo.the_symbol;
+        socket.emit('subscribe', symbol);
+        socket.on(symbol, bar => {
+            let [jy, jm, jd] = bar.date_fa.split('/');
+            bar.time = encript_jalali({
+                jy: +jy, jm: +jm, jd: +jd
+            });
+            onRealtimeCallback(bar);
+        });
+        subscrptionMap[subscriberUID] = symbol;
         // TODO:
         // console.log('[subscribeBars]: Method call with subscribeUID:', subscribeUID);
         // subscribeOnStream(
@@ -208,6 +222,7 @@ export default {
     },
 
     unsubscribeBars: (subscriberUID) => {
+        socket.emit('unsubscribe', subscrptionMap[subscriberUID]);
         // TODO:
         // console.log('[unsubscribeBars]: Method call with subscriberUID:', subscriberUID);
         // unsubscribeFromStream(subscriberUID);
