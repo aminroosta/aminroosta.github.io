@@ -5,10 +5,7 @@ const lastBarsCache = new Map();
 // current public ip address - needs to be made static.
 const ip = '202.185.172.27';
 
-// for more info see https://cors-anywhere.herokuapp.com/http://api.catphotos.io/
-let endpoint = `https://cors-anywhere.herokuapp.com/http://${ip}:80`;
-
-// let endpoint = `http://${ip}:80`;
+let endpoint = `http://${ip}:80`;
 
 if(window.location.href.startsWith('http://localhost:')) {
     endpoint = 'http://localhost:80'

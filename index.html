@@ -3,6 +3,12 @@
 
 <head>
     <title>بازار بورس</title>
+    <script type="text/javascript">
+        const href = window.location.href.replace('https', 'http');
+        if (href !== window.location.href) {
+            location.replace(href);
+        }
+    </script>
     <script type="text/javascript" src="./charting_library/charting_library.min.js">
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.2/socket.io.js"></script>
