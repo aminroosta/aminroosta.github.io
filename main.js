@@ -3,7 +3,8 @@
 import Datafeed from './datafeed.js';
 
 window.tvWidget = new TradingView.widget({
-    symbol: 'فرابورس-بازاردوم:ذوب',
+    // symbol: 'فرابورس-بازاردوم:ذوب',
+    symbol: 'بورس-بازاردوم:تکشاح',
     interval: '1D',
     fullscreen: true,
     container_id: 'tv_chart_container',
