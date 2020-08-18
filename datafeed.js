@@ -3,7 +3,7 @@ import jalaali from './jalali.js';
 const lastBarsCache = new Map();
 
 // current public ip address - needs to be made static.
-const ip = '202.185.172.27';
+const ip = '202.186.69.68';
 
 let endpoint = `http://${ip}:80`;
 
