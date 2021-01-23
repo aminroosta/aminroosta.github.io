@@ -1,0 +1,16 @@
+[
+  {
+    "absPath": "/home/circleci/project/website/dist/app.6e5c4e69.js",
+    "browserPath": "/app.6e5c4e69.js",
+    "relativePath": "app.6e5c4e69.js",
+    "type": "js",
+    "webIndexed": true
+  },
+  {
+    "absPath": "/home/circleci/project/website/dist/vendor.06210ae97.js",
+    "browserPath": "/vendor.06210ae97.js",
+    "relativePath": "vendor.06210ae97.js",
+    "type": "js",
+    "webIndexed": true
+  }
+]
