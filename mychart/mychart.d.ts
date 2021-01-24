@@ -1,6 +1,6 @@
 declare module "index" {
-    import { Buffer, DrawConfig } from "regl";
-    export const temp = 5;
+    import regl, { Buffer, DrawConfig } from "regl";
+    export const createREGL: typeof regl;
     export const Triangle: DrawConfig<{
         color: [number, number, number, number];
         resolution: [number, number];
