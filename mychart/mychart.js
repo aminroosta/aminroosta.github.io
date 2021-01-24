@@ -1,0 +1,9 @@
+var mychart=(()=>{const defines={};const entry=[null];function define(name,dependencies,factory){defines[name]={dependencies,factory};entry[0]=name;}
+define("require",["exports"],(exports)=>{Object.defineProperty(exports,"__cjsModule",{value:true});Object.defineProperty(exports,"default",{value:(name)=>resolve(name)});});define("index",["require","exports"],function(require,exports){"use strict";Object.defineProperty(exports,"__esModule",{value:true});exports.Triangle=void 0;exports.Triangle={frag:`precision mediump float;uniform vec4 color;void main(){gl_FragColor=color;}`,vert:`precision mediump float;uniform vec2 resolution;attribute vec2 position;void main(){vec2 result=2.0*position/resolution-1.0;gl_Position=vec4(result,0,1);}`,attributes:{position:(_,{position})=>position,},uniforms:{color:(_,{color})=>color,resolution:(ctx)=>[ctx.viewportWidth,ctx.viewportHeight],},count:3,};});'marker:resolver';function get_define(name){if(defines[name]){return defines[name];}
+else if(defines[name+'/index']){return defines[name+'/index'];}
+else{const dependencies=['exports'];const factory=(exports)=>{try{Object.defineProperty(exports,"__cjsModule",{value:true});Object.defineProperty(exports,"default",{value:require(name)});}
+catch(_a){throw Error(['module "',name,'" not found.'].join(''));}};return{dependencies,factory};}}
+const instances={};function resolve(name){if(instances[name]){return instances[name];}
+if(name==='exports'){return{};}
+const define=get_define(name);instances[name]={};const dependencies=define.dependencies.map(name=>resolve(name));define.factory(...dependencies);const exports=dependencies[define.dependencies.indexOf('exports')];instances[name]=(exports['__cjsModule'])?exports.default:exports;return instances[name];}
+if(entry[0]!==null){return resolve(entry[0]);}})();
