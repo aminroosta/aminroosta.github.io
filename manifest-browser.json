@@ -1,15 +1,15 @@
 [
   {
-    "absPath": "/home/circleci/project/website/dist/app.063019522.js",
-    "browserPath": "/app.063019522.js",
-    "relativePath": "app.063019522.js",
+    "absPath": "/home/circleci/project/website/dist/app.04308674c.js",
+    "browserPath": "/app.04308674c.js",
+    "relativePath": "app.04308674c.js",
     "type": "js",
     "webIndexed": true
   },
   {
-    "absPath": "/home/circleci/project/website/dist/vendor.68ffcba5.js",
-    "browserPath": "/vendor.68ffcba5.js",
-    "relativePath": "vendor.68ffcba5.js",
+    "absPath": "/home/circleci/project/website/dist/vendor.76f7a2ca.js",
+    "browserPath": "/vendor.76f7a2ca.js",
+    "relativePath": "vendor.76f7a2ca.js",
     "type": "js",
     "webIndexed": true
   }
