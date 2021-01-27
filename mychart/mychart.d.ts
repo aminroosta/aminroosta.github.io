@@ -19,6 +19,15 @@ declare module "data-source" {
         };
     };
 }
+declare module "data-view" {
+    export function buildDataView(width: number, getBarCount: () => number): {
+        move: (bars: number) => void;
+        squeeze: (pixels: number) => void;
+        setWidth: (value: number) => void;
+        getZoom: () => number;
+        getOrigin: () => number;
+    };
+}
 declare module "index" {
     import { Buffer, DrawConfig } from "regl";
     export const temp = 5;
