@@ -1,6 +1,7 @@
 declare module "data-source" {
     import { Buffer, Regl } from "regl";
-    type Bar = {
+    export type DataSource = ReturnType<typeof buildDataSource>;
+    export type Bar = {
         epoch: number;
         open: number;
         high: number;
@@ -9,7 +10,8 @@ declare module "data-source" {
         volume: number;
     };
     export function buildDataSource(): Bar[] & {
-        buffers: (r: Regl) => {
+        buffers: (regl: Regl) => {
+            ids: Buffer;
             bar2x: Buffer;
             bar3x: Buffer;
             bar2x_cpu: Float32Array;
