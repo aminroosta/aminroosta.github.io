@@ -1,22 +1,22 @@
 [
   {
-    "absPath": "/Users/amin/projects/mychart/website/dist/app.073f7d34.js",
-    "browserPath": "/app.073f7d34.js",
-    "relativePath": "app.073f7d34.js",
+    "absPath": "/home/circleci/project/website/dist/app.3e0e4b2f.js",
+    "browserPath": "/app.3e0e4b2f.js",
+    "relativePath": "app.3e0e4b2f.js",
     "type": "js",
     "webIndexed": true
   },
   {
-    "absPath": "/Users/amin/projects/mychart/website/dist/vendor.52053b2e.js",
-    "browserPath": "/vendor.52053b2e.js",
-    "relativePath": "vendor.52053b2e.js",
+    "absPath": "/home/circleci/project/website/dist/vendor.0ed2fc4b.js",
+    "browserPath": "/vendor.0ed2fc4b.js",
+    "relativePath": "vendor.0ed2fc4b.js",
     "type": "js",
     "webIndexed": true
   },
   {
-    "absPath": "/Users/amin/projects/mychart/website/dist/styles/styles.26e19072.css",
-    "browserPath": "/styles/styles.26e19072.css",
-    "relativePath": "styles/styles.26e19072.css",
+    "absPath": "/home/circleci/project/website/dist/styles/styles.0468a9391.css",
+    "browserPath": "/styles/styles.0468a9391.css",
+    "relativePath": "styles/styles.0468a9391.css",
     "type": "css",
     "webIndexed": true
   }
