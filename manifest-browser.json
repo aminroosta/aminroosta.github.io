@@ -1,22 +1,22 @@
 [
   {
-    "absPath": "/home/circleci/project/website/dist/app.39e65b8c.js",
-    "browserPath": "/app.39e65b8c.js",
-    "relativePath": "app.39e65b8c.js",
+    "absPath": "/home/circleci/project/website/dist/app.2af470b0.js",
+    "browserPath": "/app.2af470b0.js",
+    "relativePath": "app.2af470b0.js",
     "type": "js",
     "webIndexed": true
   },
   {
-    "absPath": "/home/circleci/project/website/dist/vendor.07e0002c8.js",
-    "browserPath": "/vendor.07e0002c8.js",
-    "relativePath": "vendor.07e0002c8.js",
+    "absPath": "/home/circleci/project/website/dist/vendor.57523b6b.js",
+    "browserPath": "/vendor.57523b6b.js",
+    "relativePath": "vendor.57523b6b.js",
     "type": "js",
     "webIndexed": true
   },
   {
-    "absPath": "/home/circleci/project/website/dist/styles/styles.6b754388.css",
-    "browserPath": "/styles/styles.6b754388.css",
-    "relativePath": "styles/styles.6b754388.css",
+    "absPath": "/home/circleci/project/website/dist/styles/styles.72a29cb0.css",
+    "browserPath": "/styles/styles.72a29cb0.css",
+    "relativePath": "styles/styles.72a29cb0.css",
     "type": "css",
     "webIndexed": true
   }
