@@ -1,0 +1,54 @@
+<svg width="172pt" height="188pt" viewBox="0.00 0.00 172.02 188.00" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 184)">
+<title>foo</title>
+<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-184 168.024,-184 168.024,4 -4,4"></polygon>
+<!-- client -->
+<g id="node1" class="node">
+<title>client</title>
+<ellipse fill="none" stroke="#000000" cx="88.2183" cy="-162" rx="32.4788" ry="18"></ellipse>
+<text text-anchor="middle" x="88.2183" y="-157.8" font-family="Times,serif" font-size="14.00" fill="#000000">client</text>
+</g>
+<!-- api -->
+<g id="node2" class="node">
+<title>api</title>
+<ellipse fill="none" stroke="#000000" cx="88.2183" cy="-90" rx="27" ry="18"></ellipse>
+<text text-anchor="middle" x="88.2183" y="-85.8" font-family="Times,serif" font-size="14.00" fill="#000000">api</text>
+</g>
+<!-- client&#45;&gt;api -->
+<g id="edge1" class="edge">
+<title>client-&gt;api</title>
+<path fill="none" stroke="#000000" d="M82.3026,-144.2022C81.4981,-136.1807 81.2754,-126.5231 81.6345,-117.5957"></path>
+<polygon fill="#000000" stroke="#000000" points="85.1279,-117.8099 82.3232,-107.593 78.1445,-117.3289 85.1279,-117.8099"></polygon>
+</g>
+<!-- api&#45;&gt;client -->
+<g id="edge4" class="edge">
+<title>api-&gt;client</title>
+<path fill="none" stroke="#000000" d="M94.1133,-107.593C94.9277,-115.5865 95.1603,-125.2363 94.8111,-134.1759"></path>
+<polygon fill="#000000" stroke="#000000" points="91.3158,-133.9891 94.134,-144.2022 98.2999,-134.4608 91.3158,-133.9891"></polygon>
+</g>
+<!-- postgres -->
+<g id="node3" class="node">
+<title>postgres</title>
+<ellipse fill="none" stroke="#000000" cx="43.2183" cy="-18" rx="43.4377" ry="18"></ellipse>
+<text text-anchor="middle" x="43.2183" y="-13.8" font-family="Times,serif" font-size="14.00" fill="#000000">postgres</text>
+</g>
+<!-- api&#45;&gt;postgres -->
+<g id="edge2" class="edge">
+<title>api-&gt;postgres</title>
+<path fill="none" stroke="#000000" d="M77.7813,-73.3008C72.3743,-64.6496 65.6478,-53.8873 59.5697,-44.1623"></path>
+<polygon fill="#000000" stroke="#000000" points="62.4945,-42.2382 54.2265,-35.6132 56.5586,-45.9482 62.4945,-42.2382"></polygon>
+</g>
+<!-- redis -->
+<g id="node4" class="node">
+<title>redis</title>
+<ellipse fill="none" stroke="#000000" cx="134.2183" cy="-18" rx="29.6127" ry="18"></ellipse>
+<text text-anchor="middle" x="134.2183" y="-13.8" font-family="Times,serif" font-size="14.00" fill="#000000">redis</text>
+</g>
+<!-- api&#45;&gt;redis -->
+<g id="edge3" class="edge">
+<title>api-&gt;redis</title>
+<path fill="none" stroke="#000000" d="M98.8872,-73.3008C104.4956,-64.5224 111.4928,-53.5703 117.7771,-43.7339"></path>
+<polygon fill="#000000" stroke="#000000" points="120.8533,-45.42 123.2878,-35.1086 114.9544,-41.6512 120.8533,-45.42"></polygon>
+</g>
+</g>
+</svg>
