@@ -22,17 +22,32 @@ digraph foo {
 }
 ```
 
-<img src="/assets/images/dot-lang-foo.svg" width="280"   height="280" />
+{% graphviz %}
+digraph {
+  node [shape=circle, style=filled];
+  S [fillcolor=green];
+  A [fillcolor=yellow];
+  B [fillcolor=yellow];
+  C [fillcolor=yellow];
+  D [shape=doublecircle, fillcolor=green];
+  S -> A [label=a];
+  S -> B [label=b];
+  A -> D [label=c];
+  B -> D [label=d];
+}
+{% endgraphviz %}
 
-```dot
 // -> connects one side to the other
+
+---
+---
 digraph foo {
     client -> api;
     api -> postgres;
     api -> redis;
     api -> client;
+    t -> u;
 }
-```
 
 Use rank to force some nodes be on the same line.
 
