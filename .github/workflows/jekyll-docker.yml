@@ -17,14 +17,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Install graphviz
-        run: sudo apt-get install -y graphviz
       - name: Setup Pages
         uses: actions/configure-pages@v5
-      - name: Build
-        uses: actions/jekyll-build-pages@v1
+      - name: Install deps & Build
+        run: |
+          sudo apt-get install -y graphviz ruby-full build-essential zlib1g-dev &&
+          export GEM_HOME="$HOME/gems" &&
+          export PATH="$HOME/gems/bin:$PATH" &&
+          gem install jekyll bundler &&
+          bundler install &&
+          bundle exec jekyll build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
+        with:
+          path: build_outputs_folder/
   deploy:
     runs-on: ubuntu-latest
     needs: build
