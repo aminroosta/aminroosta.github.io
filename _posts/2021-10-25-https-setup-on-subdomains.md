@@ -1,31 +1,31 @@
-@import "index.less"
-
-[back to home](./index.html)
-
-## How to setup multiple https subdomains
-
+---
+layout: post
+title:  "HTTPS Setup on Subdomains"
+date: 2021-10-25 16:52:40 +0200
+categories: devops
+---
 In this article I explain how I run multiple docker containers, each having its own subdomain, serving http but being visible to the outside wold through https.
 
-@import "assets/nginx-subdomain-flow.png" { width=640px title="linode add subdomain"}
+<img src="/assets/images/nginx-subdomain-flow.png"  width="640" alt="linode add subdomain" />
 
 The first steps is to buy a domain and a virtual private server (or VPS for short). There are tons of options, I used [google domains](https://domains.google.com) to buy a domain, and [linode.com](https://www.linode.com/) as my cloud provider.
 
 #### How to buy a domain
 
-Go to domains.google.com and follow the UI, you can find many domains for less than $10\$/year$, depending on your location as low as $5\$/year$.
+Go to domains.google.com and follow the UI, you can find many domains for less than `10$/year`, depending on your location as low as `5$/year`.
 
-@import "assets/google-buy-domain.png" { width=640px title="buy a google domain"}
+<img src="/assets/images/google-buy-domain.png"  width="640" alt="buy a google domain" />
 
 Although Google can be used to manage DNS records directly, I used the  linode [dns manager](https://www.linode.com/docs/guides/dns-manager/), to do that we I set linode name servers on the google domain.
 
 
-@import "assets/google-set-nameserver.png" { width=640px title="set nameservers on google domains"}
+<img src="/assets/images/google-set-nameserver.png"  width="640" alt="set nameservers on google domains" />
 
 #### How to buy a Linode
 
 It's time to buy a VPS from linode, I chose Debian because it's very stable distribution, and has a great support & community.
 
-@import "assets/linode-buy-vps.png" { width=640px title="buy vps from linode"}
+<img src="/assets/images/linode-buy-vps.png"  width="640" alt="buy vps from linode" />
 
 If you scroll down, there is a section for the root password.
 Once your server is created, up, and running, use that password for the `ssh` command.
@@ -40,13 +40,13 @@ If you do use ssh keys, you can set your keys as well. That will eliminate the n
 You can skip this step, If you don't use ssh keys and are not familiar with them.
 
 ```bash
+# copy public key to clipboard on MacOS
 cat ~/.ssh/id_rsa.pub | pbcopy
-# copy public key to clipboard on macos
+# copy public key on Linux
 cat ~/.ssh/id_rsa.pub | xclip -selection clipboard
-# copy public key on linux
 ```
 
-@import "assets/linode-set-password.png" { width=640px title="set linode password"}
+<img src="/assets/images/linode-set-password.png"  width="640" alt="set linode password" />
 
 Once the server is created, log into your node.  
 As a bonus you can give your server a nickname in `~/.ssh/config`.
@@ -102,17 +102,17 @@ Before setting up docker-compose and talking about subdomains, lets take care of
 
 On the left panel side, you can import your domain, as long as the domain registrar points to linode name servers `ns<1, ..., 5>.linode.com`.
 
-@import "assets/linode-add-domain.png" { width=640px title="add domain to linode"}
+<img src="/assets/images/linode-add-domain.png"  width="640" alt="add domain to linode" />
 
 If you choose an existing server, in this case `debian-ca-central`, linode automatically adds the necessary dns records.
 
-@import "assets/linode-dns-records.png" { width=640px title="linode dns records"}
+<img src="/assets/images/linode-dns-records.png"  width="640" alt="linode dns records" />
 
 To Add subdomains, click on `Add an A/AAAA Record` and use the same ip address as the server.  
 
 Later in the tutorial we will configure nginx to proxy the traffic for multiple subdomains. For now make sure to add a subdomain named `filebrowser` which we will set up shortly.
 
-@import "assets/linode-add-subdomain.png" { width=320px title="linode add subdomain"}
+<img src="/assets/images/linode-add-subdomain.png"  width="320" alt="linode add subdomain" />
 
 
 #### How to setup nginx for https
@@ -245,14 +245,10 @@ docker-compose logs -f
 
 The top level domain, should handle https, and serve the default `swag` files. We can change this later on by editing `.swag/nginx/nginx.conf` file to proxy the traffic to yet another container.
 
-@import "assets/nginx-top-domain.png" { width=440px title="nginx top domain"}
+<img src="/assets/images/nginx-top-domain.png"  width="440" alt="nginx top domain" />
 
 And the subdomain, is served as https, in this case points to our filebrowser example.
 
-@import "assets/nginx-subdomain.png" { width=360px title="nginx subdomain"}
+<img src="/assets/images/nginx-subdomain.png"  width="360" alt="nginx subdomain" />
 
 If you have followed the tutorial so far, the username and password are both `admin` for [filebrowser](https://filebrowser.org/installation) initially, you can change them in the app.
-
----
-
-[back to home](./index.html)

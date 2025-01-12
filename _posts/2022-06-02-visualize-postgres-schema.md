@@ -1,10 +1,15 @@
-@import "index.less"
+---
+layout: post
+title:  "Visualize PostgreSQL Schema"
+date:   2022-06-02 10:20:28 -0400
+categories: database
+---
 
-[back to home](./index.html)
+**Update Sep 2024:** Use my new website [quickdbschema.com](https://quickdbschema.com/) which runs `SchemaSpy` for you.
 
-## How to visualize postgresql schema
+---
 
-[SchemaSpy](https://github.com/schemaspy/schemaspy) is tool that generates html & csv files to visualize and navigate a database.
+**[SchemaSpy](https://github.com/schemaspy/schemaspy)** is tool that generates html & CSV files to visualize and navigate a database.
 
 This tutorial documents the steps for visualizing a postgresql database schema.
 
