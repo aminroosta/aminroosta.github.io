@@ -23,31 +23,13 @@ digraph foo {
 ```
 
 {% graphviz %}
-digraph {
-  node [shape=circle, style=filled];
-  S [fillcolor=green];
-  A [fillcolor=yellow];
-  B [fillcolor=yellow];
-  C [fillcolor=yellow];
-  D [shape=doublecircle, fillcolor=green];
-  S -> A [label=a];
-  S -> B [label=b];
-  A -> D [label=c];
-  B -> D [label=d];
-}
-{% endgraphviz %}
-
-// -> connects one side to the other
-
----
----
 digraph foo {
     client -> api;
     api -> postgres;
     api -> redis;
     api -> client;
-    t -> u;
 }
+{% endgraphviz %}
 
 Use rank to force some nodes be on the same line.
 
@@ -60,16 +42,14 @@ digraph foo {
 }
 ```
 
-<img src="/assets/images/dot-lang-foo-rank.svg" width="280"   height="280" />
-
-```dot
+{% graphviz %}
 digraph foo {
     { rank = same; client api }
     client -> api;
     api -> postgres;
     api -> redis;
 }
-```
+{% endgraphviz %}
 
 Use `label` to rename a node, or comment on an arrow.
 
@@ -80,12 +60,12 @@ digraph foo {
 }
 ```
 
-```dot
+{% graphviz %}
 digraph foo {
     pg [ label = "postgresql"];
     api -> pg [ label="  writes to" ];
 }
-```
+{% endgraphviz %}
 
 Style your nodes using `style`, `fillcolor`, `color`, `fontcolor`, `shape`, and `fontsize`.
 
@@ -106,7 +86,7 @@ digraph foo {
 }
 ```
 
-```dot
+{% graphviz %}
 digraph foo {
     api [
         shape="box",
@@ -121,7 +101,7 @@ digraph foo {
     ];
     api -> postgres;
 }
-```
+{% endgraphviz %}
 
 It's possible to style all nodes at the same time.
 
@@ -137,7 +117,7 @@ digraph {
 }
 ```
 
-```dot
+{% graphviz %}
 digraph {
         node [
             style="filled",
@@ -147,7 +127,7 @@ digraph {
         api -> redis;
         api -> postgres;
 }
-```
+{% endgraphviz %}
 
 You can also apply the same style on multiple nodes.
 
@@ -177,7 +157,7 @@ digraph {
 }
 ```
 
-```dot
+{% graphviz %}
 digraph {
         browser, mobile [
             style="filled",
@@ -201,4 +181,4 @@ digraph {
         api -> postgres;
         mobile -> api;
 }
-```
+{% endgraphviz %}
