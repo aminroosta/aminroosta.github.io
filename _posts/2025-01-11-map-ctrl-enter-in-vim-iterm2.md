@@ -10,7 +10,7 @@ However, I've found an alternative: instead of mapping those key combinations di
 I would get iTerm2 to send the function keys (`F1` to `F12`) when `ctrl+enter` or `shift+enter` is pressed; and, create my Vim mappings using the function keys.
 
 To find the escape sequence keys corresponding to the function keys, press `ctrl+v` in a shell prompt followed by the function key.
-On a MacBook, press fn along with the keys on the top row to press a function key.
+On a MacBook, press fn along with the keys on the top row to send a function key.
 
 Here's what I get on my MacBook Air:
 ```sh
@@ -25,7 +25,7 @@ $ ^[[19~  # F8
 $ ^[[20~  # F9
 $ ^[[21~  # F10
 $         # Nothing shows up for F11 on my machine
-$ ^[[24~  # F12
+$ ^[[24~  #F12
 ```
 
 Please note that `^[` marks the beginning of the escape sequence.
@@ -33,7 +33,7 @@ Next, navigate to iTerm2 Settings > Profiles > Keys > Key Mappings, and click th
 Press the key combination you wish to map, then choose the "Send Escape Sequence" action, and enter the corresponding escape sequence, omitting the `^[` portion.
 For example, `F1` should be entered as `OP`.
 
-@import "assets/iterm2-f1-mapping.png" { width=640px title="Map CTRL+ENTER to F1 on iTerm2"}
+<img src="/assets/images/iterm2-f1-mapping.png" width="640" alt="Map CTRL+ENTER to F1 on iTerm2" />
 
 And finally, be sure to update your vim mappings:
 
