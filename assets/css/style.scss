@@ -5,3 +5,13 @@
 @import
   "minima/skins/{{ site.minima.skin | default: 'classic' }}",
   "minima/initialize";
+
+@media (prefers-color-scheme: dark) {
+  html {
+    filter: invert(1) hue-rotate(180deg);
+    background: white;
+  }
+  img {
+    filter: invert(1) hue-rotate(180deg);
+  }
+}
