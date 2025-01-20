@@ -38,14 +38,14 @@ touch /etc/caddy/Caddyfile
 ```
 
 You need to have a domain with an `A` record pointing to your server's IP address.  
-Here's how to do that in [Cloudflare](https://chemicloud.com/kb/article/manage-dns-in-cloudflare/), [Namecheap](https://www.namecheap.com/support/knowledgebase/article.aspx/319/2237/how-can-i-set-up-an-a-address-record-for-my-domain/), or [GoDaddy](https://kinsta.com/knowledgebase/godaddy-a-record/).
+Here's how to do that on [Cloudflare](https://chemicloud.com/kb/article/manage-dns-in-cloudflare/), [Namecheap](https://www.namecheap.com/support/knowledgebase/article.aspx/319/2237/how-can-i-set-up-an-a-address-record-for-my-domain/), or [GoDaddy](https://kinsta.com/knowledgebase/godaddy-a-record/).
 
 
 Assuming your local HTTP based service is running on port `8080` ...
 
 ```yml
-# For example the comment section on this Blog is handled by remark42 image.
-# Here is a portion of my docker-compose.yml file.
+# For example, the comment section on this blog is handled by remark42.
+# Here is the relevant portion of my docker-compose.yml
 services:
   remark:
     image: umputun/remark42:latest
@@ -58,12 +58,15 @@ services:
     volumes:
       - /var/lib/remark:/srv/var
 ```
-Update the `Caddyfile` and restart the service -- `service caddy restart`.
+Update the `Caddyfile` and restart the service.
 ```conf
 # /etc/caddy/Caddyfile
 yourdomain.com {
   reverse_proxy * 127.0.0.1:8080
 }
+```
+```sh
+service caddy restart
 ```
 After a minute or so, you should be able to open `https://yourdomain.com` using a web browser.
 
@@ -74,8 +77,6 @@ journalctl -f -u caddy
 ```
 
 Here is more a complex example.  
-See the [Caddyfile Common Patterns](https://caddyserver.com/docs/caddyfile/patterns) for more advanced setups.
-
 ```conf
 myblog.com {
   # serve the html/css/js files from /root/app
@@ -91,3 +92,4 @@ remark.myblog.com {
   reverse_proxy * 127.0.0.1:8080
 }
 ```
+See the [*Common Patterns*](https://caddyserver.com/docs/caddyfile/patterns) section of the docs for more advanced features.
