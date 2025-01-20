@@ -5,10 +5,13 @@ date:   2025-01-20 16:30:00 -0500
 categories: devops
 ---
 
-[Caddy](https://github.com/caddyserver/caddy) is an easy-to-configure reverse proxy with HTTPS support.  
-The TLS certificate are issued by [Let's Encrypt](https://letsencrypt.org/), and caddy automatically renews them for you.
+In 2021, I <a href="{% post_url 2021-10-25-https-setup-on-subdomains %}">wrote</a> about setting up HTTPS with `nginx` and `swag`.
+But, I've found a much simpler approach recently using `Caddy`.
 
-To install it, follow the [documentation](https://caddyserver.com/docs/install#debian-ubuntu-raspbian).  
+[Caddy](https://github.com/caddyserver/caddy) is an easy-to-configure reverse proxy which enables HTTPS by default.  
+The TLS certificates are issued by [Let's Encrypt](https://letsencrypt.org/), and caddy automatically renews them for you.
+
+To install it, follow the [documentation](https://caddyserver.com/docs/install#debian-ubuntu-raspbian); here is the debian installation section:
 
 ```sh
 sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https curl
@@ -18,7 +21,7 @@ sudo apt update
 sudo apt install caddy
 ```
  
-That installs a new service called `caddy`, which continues to run even after you reboot your server.
+Caddy is installed as a new service, which continues to run even after you reboot your server.
 ```sh
 # Use the service command to manage the "caddy" service.
 service caddy status 
@@ -28,7 +31,7 @@ service caddy restart
 systemctl status caddy
 ```
 
-The service, by default, points to the `/etc/caddy/Caddyfile`. Create one if it doesn't exist.
+The service, by default, points to the `/etc/caddy/Caddyfile`; create one if it doesn't exist.
 
 ```sh
 touch /etc/caddy/Caddyfile
@@ -69,8 +72,6 @@ To see the service logs, use the `journalctl` command.
 ```sh
 journalctl -f -u caddy
 ```
-
----
 
 Here is more a complex example.  
 See the [Caddyfile Common Patterns](https://caddyserver.com/docs/caddyfile/patterns) for more advanced setups.
