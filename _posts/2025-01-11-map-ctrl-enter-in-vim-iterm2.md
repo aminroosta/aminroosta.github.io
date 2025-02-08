@@ -5,6 +5,28 @@ date:   2025-01-11 21:27:10 -0500
 categories: tools
 ---
 
+### Method 2 (updated at 2025-02-08):
+
+[CSI u](https://iterm2.com/documentation-csiu.html) is an advanced way of reporting key combinations and is supported by neovim, iterm2 and tmux.
+* Enable the `CSI u` mode in iterm2.
+  * Profiles > Keys > Report keys using CSI u
+    <img src="/assets/images/map-ctrl-enter-iterm2-csi-u.png"  alt="enable CSI u in Iterm2" />
+   
+* Optionally download the [CSIu-Backward-Compat.itermkeymap](https://iterm2.com/keymaps/CSIu-Backward-Compat.itermkeymap) and import it.
+  * Profiles > Keys > Key Mappings > Import
+    <img src="/assets/images/map-ctrl-enter-iterm2-import-preset.png"  alt="enable CSI u in Iterm2" />
+  
+* Enable [extended-keys](https://github.com/tmux/tmux/wiki/Modifier-Keys
+) for tmux.
+  ```sh
+  set -s extended-keys on
+  ```
+* Write normal key mappings in neovim:
+  ```lua
+  vim.api.nvim_set_keymap("n", "<C-Cr>", "za", { noremap = true })
+  ```
+
+### Method 1
 You can't directly map `<c-cr>` or `<s-cr>` in vim, because iTerm2 doesn't send those key combinations to the terminal.
 However, I've found an alternative: instead of mapping those key combinations directly,
 I would get iTerm2 to send the function keys (`F1` to `F12`) when `ctrl+enter` or `shift+enter` is pressed; and, create my Vim mappings using the function keys.
