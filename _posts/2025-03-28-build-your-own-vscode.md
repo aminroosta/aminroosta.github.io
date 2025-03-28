@@ -5,7 +5,7 @@ date:   2025-03-28 10:00:00 0000
 categories: tools
 ---
 
-You can download a pre-built version of my customized version of VSCode [here](/assets/download/VSCodium.tar.gz).  
+You can download a pre-built version of my customized version of VSCode [here](/assets/download/VSCodium.zip).  
 
 ---
 
@@ -127,5 +127,14 @@ ls ./VSCode-darwin-arm64/VSCodium.app
 ---
 
 ### Other Options  
-- **Build My Fork:** You can use my version of VSCodium [here](https://github.com/aminroosta/vscodium), which includes the folding fix and floating window support.  
-- **Download Pre-Built:** Or grab the ready-made version [here](/assets/download/VSCodium.tar.gz).  
+- You can build [my VSCodium fork](https://github.com/aminroosta/vscodium), which includes the folding fix and floating window support.  
+	- To enable floating window, add this snippet to your `settings.json`:
+	```json
+	"window.workspacesOverlay": {
+			"enabled": true,
+			"alwaysOnTop": false,
+			"hotKey": "Control+Enter",
+			"snapMode": "bottom"
+	}
+	```
+- Or grab the pre-built version [here](/assets/download/VSCodium.zip).
