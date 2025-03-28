@@ -5,7 +5,7 @@ date:   2025-03-28 10:00:00 0000
 categories: tools
 ---
 
-You can download a pre-built version of my customized version of VSCode [here](/assets/download/VSCodium.zip).  
+You can download a pre-built version of my customized version of VSCode <a href="https://github.com/aminroosta/aminroosta.github.io/raw/refs/heads/gh-pages/assets/download/VSCodium.zip?download=">here</a>.
 
 ---
 
@@ -137,4 +137,4 @@ ls ./VSCode-darwin-arm64/VSCodium.app
 			"snapMode": "bottom"
 	}
 	```
-- Or grab the pre-built version [here](/assets/download/VSCodium.zip).
+- Or grab the pre-built version  <a href="https://github.com/aminroosta/aminroosta.github.io/raw/refs/heads/gh-pages/assets/download/VSCodium.zip?download=">here</a>.
