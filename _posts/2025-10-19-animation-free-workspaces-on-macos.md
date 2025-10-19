@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "How I Use Aerospace to Have Animation-Free Workspaces on MacOS"
+title:  "Animation-Free Workspaces on MacOS"
 date:   2025-10-19 10:00:00 0000
 categories: tools
 ---
@@ -42,7 +42,7 @@ run = ['layout floating']
 Every app window floats freely now—no more tiling.
 
 
-### The Magic Trick: A Bash Script for Smooth Navigation
+### The Magic Trick: A Bash Script for Navigation
 
 A bash script at `~/.config/aerospace/aerospace.sh` calculates next/previous workspaces.
 
@@ -106,6 +106,6 @@ move_to_workspace() {
 
 
 You can view my complete configs here: 
-<a href="https://github.com/aminroosta/aminroosta.github.io/raw/refs/heads/gh-pages/assets/configs/aerospace.toml?download=">aerospace.toml</a> 
+<a href="https://github.com/aminroosta/aminroosta.github.io/raw/refs/heads/gh-pages/assets/download/aerospace.toml?download=">aerospace.toml</a> 
 and 
-<a href="https://github.com/aminroosta/aminroosta.github.io/raw/refs/heads/gh-pages/assets/configs/aerospace.sh?download=">aerospace.sh</a>.
+<a href="https://github.com/aminroosta/aminroosta.github.io/raw/refs/heads/gh-pages/assets/download/aerospace.sh?download=">aerospace.sh</a>.
