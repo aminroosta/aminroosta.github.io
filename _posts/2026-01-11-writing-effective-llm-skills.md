@@ -5,30 +5,59 @@ date: 2026-01-11
 categories: [tools, llm]
 ---
 
+{% graphviz %}
+digraph {
+  rankdir=LR;
+  node [shape=box, style="rounded"];
+
+  user [label="User request"];
+  agent [label="LLM agent"];
+  skills [label="skills/ folder\n(<skill>/SKILL.md + scripts/)"];
+  registry [label="Loaded at startup\nskill metadata\n(name + description)\n(in context)"];
+  skillmd [label="Loaded on demand\nselected SKILL.md\n(in context)"];
+  scripts [label="Helper scripts\n(outside context)"];
+  output [label="Script output\n(results/snippets)\n(in context)"];
+
+  user -> agent;
+  skills -> registry [label="index"];
+  registry -> agent;
+
+  agent -> skillmd [label="pick skill"];
+  skills -> skillmd;
+
+  agent -> scripts [label="run"];
+  skills -> scripts;
+
+  scripts -> output;
+  output -> agent;
+  agent -> user;
+}
+{% endgraphviz %}
+
 Years ago I started as an embedded developer. Back then, the limited resources were RAM and CPU, so I wrote C and sometimes even assembly!
-Now, with LLM agents on the rise, the new limited resource is the **context window** and it's precious resource!
+Now, with LLM agents on the rise, the new limited resource is the **context window** and it's a precious resource!
 
 
-Remember the prompt-engineering hype? The next evolution of that is called **context engineering** and [skills](https://code.claude.com/docs/en/skills) are the latest approach to do that.
+Do you remember prompt-engineering? The next evolution of that is called **context engineering** and [skills](https://code.claude.com/docs/en/skills) are the latest approach to do that.
 
 A skill is just a folder with a `SKILL.md` plus a few scripts:
 
-```text
+```sh
 <skill name>/
-├── SKILL.md   # has a frontmatter with "name" and "description"
+├── SKILL.md   # includes frontmatter with "name" & "description"
 └── scripts/
     ├── <helper script>.sh
     └── <helper script 2>.py
 ```
 
-Only the skill name and description are loaded into the context window. The LLM agent decides when to load individual skills on demand.
+Only the skill name and description are loaded into the context window. The LLM agent loads skills on demand.
 
-Here’s what I have learned while writing skills:
+## Here’s what I have learned while writing skills:
 
-- **`SKILL.md` should be as informative as possible**: information density is the key.
-- **Be descriptive and avoid being prescriptive**: describe how things work. Avoid "do X then Y" at all costs!
-- **Draft → then rewrite-from-scratch**: once you have a messy first pass of `SKILL.md`, ask the LLM to rewrite it from scratch, emphasizing: `be informative, not prescriptive, information density is the key`. The rewrite is usually much smaller and easier to edit.
-- **Scripts matter**: the `scripts/` directory lets the agent do complex, frequent tasks without polluting the context window.
+- `SKILL.md` should be as informative as possible: information density is the key.
+- Be descriptive and avoid being prescriptive: describe how things work. Avoid "do X then Y" at all costs!
+- Draft → then rewrite-from-scratch: once you have a messy first pass of `SKILL.md`, ask the LLM to rewrite it from scratch, emphasizing: `be informative, not prescriptive, information density is the key`. The rewrite is usually much smaller and easier to edit.
+- Scripts matter: the `scripts/` directory lets the agent do complex, frequent tasks without polluting the context window.
 
 ---
 
@@ -180,12 +209,7 @@ They let the agent take screenshots, validate geometry, render STLs, and install
 ```bash
 #!/usr/bin/env bash
 # Install or verify BOSL2 library for OpenSCAD
-set -euo pipefail
-
-SCAD_HOME="${SCAD_HOME:-$HOME/Documents/OpenSCAD}"
-TARGET="$SCAD_HOME/libraries/BOSL2"
-
-# ... omitted for brevity
+# ...
 ```
 
 **`openscad/scripts/scad_tool.py`**:
@@ -197,7 +221,7 @@ TARGET="$SCAD_HOME/libraries/BOSL2"
 Mac-only version with preset screenshot modes and custom angle support.
 """
 
-# ... omitted for brevity
+# ...
 
 # screenshots subcommand
 # - preset: single/iso/ortho/standard
@@ -221,60 +245,11 @@ Below are the steps I took.
 
 <img src="/assets/images/tray_step1_iso.png" width="640" alt="Step 1 - floor cuboid" />  
 
-<details>
-<summary><strong>OpenSCAD code</strong></summary>
-
-```openscad
-include <BOSL2/std.scad>
-
-$fn = 64;
-
-floor_w = 150;
-floor_h = 50;
-thickness = 5;
-
-color("DodgerBlue")
-  cuboid([floor_w, floor_h, thickness], anchor=BOTTOM);
-```
-
-</details>
-
----
 
 ### Prompt 2 — “add snap_pin_socket() to the side with a 3 cm spacing”
 
 <img src="/assets/images/tray_step2_iso.png" width="640" alt="Step 2 - sockets along edge" />  
 
-<details>
-<summary><strong>OpenSCAD code</strong></summary>
-
-```openscad
-include <BOSL2/std.scad>
-include <BOSL2/joiners.scad>
-
-$fn = 64;
-
-floor_w = 150;
-floor_h = 50;
-thickness = 5;
-
-socket_spacing = 30; // 3cm
-n_sockets = floor(floor_w / socket_spacing);
-
-color("DodgerBlue")
-  diff("remove")
-    cuboid([floor_w, floor_h, thickness], anchor=BOTTOM) {
-      tag("remove")
-        back(floor_h / 2)
-          xcopies(socket_spacing, n=n_sockets)
-            snap_pin_socket("medium", orient=FWD);
-    }
-;
-```
-
-</details>
-
----
 
 ### Prompt 3 — “refactor that into a swall() module”
 
@@ -282,131 +257,20 @@ color("DodgerBlue")
 
 <img src="/assets/images/tray_step3_iso.png" width="640" alt="Step 3 - swall module" />  
 
-<details>
-<summary><strong>OpenSCAD code</strong></summary>
-
-```openscad
-include <BOSL2/std.scad>
-include <BOSL2/joiners.scad>
-
-$fn = 64;
-
-module swall(w, h, thickness = 5, socket_size = "medium", socket_spacing = 20, anchor = CENTER, spin = 0, orient = UP) {
-  n_sockets = floor(w / socket_spacing);
-  attachable(anchor, spin, orient, size=[w, h, thickness]) {
-    diff("remove")
-      cuboid([w, h, thickness]) {
-        tag("remove")
-          yflip_copy()
-            back(h / 2)
-              xcopies(socket_spacing, n=n_sockets)
-                snap_pin_socket(socket_size, orient=FWD);
-      }
-    children();
-  }
-}
-
-thickness = 5;
-floor_w = 150;
-floor_h = 50;
-
-color("DodgerBlue")
-  swall(w=floor_w, h=floor_h, thickness=thickness, socket_spacing=30, anchor=BOTTOM);
-```
-
-</details>
-
----
-
 ### Prompt 4 — “add two perpendicular swalls to the floor part, color them differently”
 
 <img src="/assets/images/tray_step4_iso.png" width="640" alt="Step 4 - add side walls" />  
 
-<details>
-<summary><strong>OpenSCAD code</strong></summary>
-
-```openscad
-// ... swall() omitted (same as step 3)
-
-thickness = 5;
-floor_w = 150;
-floor_h = 50;
-
-union() {
-  color("DodgerBlue")
-    swall(w=floor_w, h=floor_h, thickness=thickness, socket_size="medium", socket_spacing=30, anchor=BOTTOM);
-
-  xflip_copy()
-    right(floor_w / 2 - 0.01)
-      recolor("Tomato")
-        up(thickness * 2)
-          rot(90, [0, 1, 0])
-            swall(w=60, h=floor_h, thickness=thickness, socket_size="medium", socket_spacing=15, anchor=BOTTOM);
-}
-```
-
-</details>
-
----
 
 ### Prompt 5 — “add a black plate and color it silver”
 
 <img src="/assets/images/tray_step5_iso.png" width="640" alt="Step 5 - add back plate" />  
 
-<details>
-<summary><strong>OpenSCAD code</strong></summary>
-
-```openscad
-// ... swall() omitted (same as step 3)
-
-thickness = 5;
-floor_w = 150;
-floor_h = 50;
-
-union() {
-  color("DodgerBlue")
-    swall(w=floor_w, h=floor_h, thickness=thickness, socket_size="medium", socket_spacing=30, anchor=BOTTOM);
-
-  xflip_copy()
-    right(floor_w / 2 - 0.01)
-      recolor("Tomato")
-        up(thickness * 2)
-          rot(90, [0, 1, 0])
-            swall(w=60, h=floor_h, thickness=thickness, socket_size="medium", socket_spacing=15, anchor=BOTTOM);
-
-  back(floor_h / 2)
-    up(thickness - 0.01)
-      recolor("Silver")
-        cuboid([floor_w, thickness, 60 - thickness], anchor=BOTTOM + BACK);
-}
-```
-
-</details>
-
----
 
 ### Prompt 6 — “move red walls up to sit flush with the blue floor”
 
 <img src="/assets/images/tray_step6_iso.png" width="640" alt="Step 6 - final tray" />  
 
-<details>
-<summary><strong>OpenSCAD code</strong></summary>
-
-```openscad
-// See: ~/dev/scads/gemini/tray.scad
-
-// Side Walls
-xflip_copy()
-  right(floor_w / 2 - 0.01)
-    recolor("Tomato")
-      up(thickness * 2)
-        rot(90, [0, 1, 0])
-          swall(w=60, h=floor_h, thickness=thickness, socket_size="medium", socket_spacing=15, anchor=BOTTOM);
-```
-
-</details>
-
----
 
 ## Summary
 
