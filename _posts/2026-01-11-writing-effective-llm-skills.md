@@ -6,31 +6,36 @@ categories: [tools, llm]
 ---
 
 {% graphviz %}
-digraph {
-  rankdir=LR;
-  node [shape=box, style="rounded"];
+digraph skills {
+    rankdir = LR;
 
-  user [label="User request"];
-  agent [label="LLM agent"];
-  skills [label="skills/ folder\n(<skill>/SKILL.md + scripts/)"];
-  registry [label="Loaded at startup\nskill metadata\n(name + description)\n(in context)"];
-  skillmd [label="Loaded on demand\nselected SKILL.md\n(in context)"];
-  scripts [label="Helper scripts\n(outside context)"];
-  output [label="Script output\n(results/snippets)\n(in context)"];
+    node [
+        shape = "box";
+        style = "rounded";
+    ];
 
-  user -> agent;
-  skills -> registry [label="index"];
-  registry -> agent;
+    user [ label = "User request" ];
+    agent [ label = "LLM agent" ];
+    skills [ label = "skills/ folder\n(<skill>/SKILL.md + scripts/)" ];
+    registry [ label = "Startup: skill metadata\n(name + description)\n(in context)" ];
+    skillmd [ label = "On demand: SKILL.md\n(in context)" ];
+    scripts [ label = "scripts/\n(outside context)" ];
+    output [ label = "Script output\n(results/snippets)\n(in context)" ];
 
-  agent -> skillmd [label="pick skill"];
-  skills -> skillmd;
+    user -> agent;
 
-  agent -> scripts [label="run"];
-  skills -> scripts;
+    skills -> registry [ label = "index" ];
+    registry -> agent [ label = "candidate list" ];
 
-  scripts -> output;
-  output -> agent;
-  agent -> user;
+    agent -> skillmd [ label = "select/load" ];
+    skills -> skillmd;
+
+    agent -> scripts [ label = "run" ];
+    skills -> scripts;
+
+    scripts -> output;
+    output -> agent;
+    agent -> user;
 }
 {% endgraphviz %}
 
