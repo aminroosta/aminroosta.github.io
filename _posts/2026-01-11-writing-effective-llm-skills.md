@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Writing effective LLM Skills"
+title: "Writing Effective LLM Skills"
 date: 2026-01-11
 categories: [tools, llm]
 ---
