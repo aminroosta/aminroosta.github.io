@@ -5,39 +5,7 @@ date: 2026-01-11
 categories: [tools, llm]
 ---
 
-{% graphviz %}
-digraph skills {
-    rankdir = LR;
-
-    node [
-        shape = "box";
-        style = "rounded";
-    ];
-
-    user [ label = "User request" ];
-    agent [ label = "LLM agent" ];
-    skills [ label = "skills/ folder\n(<skill>/SKILL.md + scripts/)" ];
-    registry [ label = "Startup: skill metadata\n(name + description)\n(in context)" ];
-    skillmd [ label = "On demand: SKILL.md\n(in context)" ];
-    scripts [ label = "scripts/\n(outside context)" ];
-    output [ label = "Script output\n(results/snippets)\n(in context)" ];
-
-    user -> agent;
-
-    skills -> registry [ label = "index" ];
-    registry -> agent [ label = "candidate list" ];
-
-    agent -> skillmd [ label = "select/load" ];
-    skills -> skillmd;
-
-    agent -> scripts [ label = "run" ];
-    skills -> scripts;
-
-    scripts -> output;
-    output -> agent;
-    agent -> user;
-}
-{% endgraphviz %}
+<img src="/assets/images/llm-skills-loading.svg" width="720" alt="How skills are loaded into the LLM context window" />  
 
 Years ago I started as an embedded developer. Back then, the limited resources were RAM and CPU, so I wrote C and sometimes even assembly!
 Now, with LLM agents on the rise, the new limited resource is the **context window** and it's a precious resource!
@@ -243,36 +211,33 @@ Mac-only version with preset screenshot modes and custom angle support.
 2. render a screenshot
 3. repeat
 
-Below are the steps I took.
+Here are my prompt to build a part.
 
 
-## Prompt 1 — “create a cuboid of size 15 cm x 5 cm x 5mm”
+### Prompt 1 — "using openscad skill, add a tray.scad file having a cuboid of size 15 cm x 5 cm x 5mm"
 
 <img src="/assets/images/tray_step1_iso.png" width="640" alt="Step 1 - floor cuboid" />  
 
 
-### Prompt 2 — “add snap_pin_socket() to the side with a 3 cm spacing”
+### Prompt 2 — "update tray.scad to have snap_pin_socket() holes on the 15 cm x 5mm side with 3 cm spacing between the holes"
 
-<img src="/assets/images/tray_step2_iso.png" width="640" alt="Step 2 - sockets along edge" />  
-
-
-### Prompt 3 — “refactor that into a swall() module”
+### Prompt 3 — "refactor that into a module called swall() (short for socketted wall) for re-use"
 
 `swall` = socketed wall. This is where BOSL2’s `attachable()` starts paying off.
 
 <img src="/assets/images/tray_step3_iso.png" width="640" alt="Step 3 - swall module" />  
 
-### Prompt 4 — “add two perpendicular swalls to the floor part, color them differently”
+### Prompt 4 — "add two perpendicular swalls to the floor part, color them differently"
 
 <img src="/assets/images/tray_step4_iso.png" width="640" alt="Step 4 - add side walls" />  
 
 
-### Prompt 5 — “add a black plate and color it silver”
+### Prompt 5 — "add a Silver cuboid to the back of the tray"
 
 <img src="/assets/images/tray_step5_iso.png" width="640" alt="Step 5 - add back plate" />  
 
 
-### Prompt 6 — “move red walls up to sit flush with the blue floor”
+### Prompt 6 — "move red walls up to sit flush with the blue floor"
 
 <img src="/assets/images/tray_step6_iso.png" width="640" alt="Step 6 - final tray" />  
 
