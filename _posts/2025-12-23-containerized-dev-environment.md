@@ -5,10 +5,33 @@ date: 2025-12-23
 ---
 
 There is no escape from malware being constantly published to npm or pypi. Every `npm install` is a gamble.
-Here is my attempt at moving my entire development setup to a container! This works well for me since I'm too addicted to tmux and neovim.
 
+Here is my attempt at moving my entire development setup to a container. This works well if you use tmux and neovim. The goal: isolate untrusted code from the host while keeping a comfortable dev experience.
 
-**Dockerfile**: build a basic docker image with your typical development tools.
+## How It Works
+
+The setup uses three files that work together:
+
+```
+dev.sh (orchestrator)
+   │
+   ├─► Builds image from Dockerfile (base OS + tools)
+   │
+   ├─► Runs setup.sh inside container (configures dotfiles, mise, nvim plugins etc.)
+   │
+   ├─► Commits the result (so setup only runs once)
+   │
+   └─► Launches tmux in a fresh container from the committed image
+```
+
+- Isolated: `~/.ssh`, browser data, credentials, everything outside the project
+- Shared: the `~/dev` directory (mounted read-write)
+
+---
+
+## 1. Dockerfile: The Base Image
+
+This builds a minimal Fedora image with core dev tools.
 
 ```dockerfile
 FROM fedora:latest
@@ -56,14 +79,22 @@ USER ${USERNAME}
 WORKDIR /home/${USERNAME}
 ```
 
+**Notes:**
+- The user creation matches the host UID/GID so mounted files have correct permissions
+- `sudo` is passwordless for convenience
 
-**setup.sh**: a bash script to set up the machine after the container is built.
+---
+
+## 2. setup.sh: Personal Environment Setup
+
+This script runs once inside the container to set up the dotfiles and tools.
 
 ```bash
 #!/bin/bash
 
 readonly GITHUB_REPO="your-username/dot-files-repo"
 
+# Clone dotfiles using SSH (agent forwarded from host)
 git clone \
   -c core.sshCommand="ssh -o StrictHostKeyChecking=no" \
   git@github.com:${GITHUB_REPO}.git \
@@ -71,23 +102,34 @@ git clone \
   && git checkout -- . \
   && rm -rf dot-files
 
+# Install mise (manages node, python, etc.)
 curl https://mise.run | sh
+
+# Install uv (fast Python package manager)
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
 source ~/.bashrc
 
+# Install language runtimes via mise
 mise use -g node@latest
 mise use -g bun@latest
 
+# Install direnv for per-project env vars
 curl -sfL https://direnv.net/install.sh | bash
 
+# Install neovim plugins
 nvim --headless "+Lazy! sync" +qa
 
 git config --global user.email "your-email@example.com"
 git config --global user.name "your name"
 ```
 
-**dev.sh**: a script to build the container, run **setup.sh**, fix ssh forwarding, and put you right into tmux inside the container.
+---
+
+## 3. dev.sh: The Orchestrator
+
+It handles SSH agent forwarding (different on macOS vs Linux) and the build-setup-commit flow.
+
 
 ```bash
 #!/usr/bin/env bash
@@ -104,7 +146,12 @@ cleanup() {
     fi
 }
 
+### SSH Agent Forwarding
+
+# SSH keys stay on the host, but the container can use them.
+# macOS runs containers in a Linux VM, so we tunnel the socket through:
 setup_macos() {
+    # Forward host's SSH agent socket into the Podman VM
     podman machine ssh -- -R "${VM_SOCKET}:${SSH_AUTH_SOCK}" -N &
     ssh_tunnel_pid=$!
     sleep 1
@@ -116,6 +163,7 @@ setup_macos() {
     )
 }
 
+# Linux can mount the socket directly:
 setup_linux() {
     local socket_dir="/run/user/$(id -u)"
 
@@ -127,9 +175,12 @@ setup_linux() {
     )
 }
 
+### Build, Setup, and Commit
+
 main() {
     trap cleanup EXIT
 
+    # Build the base image from Dockerfile
     podman build -t "${IMAGE_NAME}:latest" .
 
     declare -a run_opts=(
@@ -137,7 +188,7 @@ main() {
         -it
         --detach-keys="ctrl-@"
         --name "${IMAGE_NAME}-temp"
-        --userns=keep-id
+        --userns=keep-id        # Maps container UID to your host UID
         --security-opt label=disable
     )
 
@@ -146,11 +197,15 @@ main() {
         *)      setup_linux ;;
     esac
 
+    # Run setup.sh and commit the result
     podman run "${run_opts[@]}" "${IMAGE_NAME}:latest" /tmp/setup.sh
     podman commit "${IMAGE_NAME}-temp" "${IMAGE_NAME}:updated"
 
+    ### Launch the Dev Environment
+
+    # Fresh options for the final container
     run_opts=(
-        --rm
+        --rm                    # Delete container on exit
         -it
         --detach-keys="ctrl-@"
         --userns=keep-id
@@ -162,6 +217,7 @@ main() {
         *)      setup_linux ;;
     esac
 
+    # Mount ONLY the project(s) directory - nothing else
     run_opts+=(-v "${HOME}/dev:/home/amin/dev")
 
     podman run "${run_opts[@]}" "${IMAGE_NAME}:updated" tmux
@@ -170,9 +226,12 @@ main() {
 main "$@"
 ```
 
-## Key Details
+- `--userns=keep-id`: The host UID maps to the container user, so file permissions work correctly on mounted volumes
+- `--security-opt label=disable`: Disables SELinux labeling (avoids permission issues with mounts)
+- `--detach-keys="ctrl-@"`: Changes the detach sequence from `ctrl-p ctrl-q` (conflicts with tmux)
 
-- **[podman](https://podman.io/)**: using podman instead of docker because it runs rootless by default; no privileged daemon required.
-- **`--userns=keep-id`**: maps container user to your host UID
-- **SSH agent forwarding**: the `-R` flag tunnels the agent socket so private keys never enter the container.
-- **Minimal mounts**: only mount your project directory so malware can't access `~/.ssh`, browser cookies, or credentials.
+---
+
+## Why Podman?
+
+I'm using [podman](https://podman.io/) instead of Docker because it runs rootless by default.
