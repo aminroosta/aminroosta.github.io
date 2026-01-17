@@ -5,6 +5,9 @@ date:   2025-03-09 l5:00:00 0000
 categories: devops
 ---
 
+> Updated Jan 27, 2025: Now supports Bun.
+
+
 The default REPL is hard to access for a detached NodeJS process.
 
 Even if you gain access to it:
@@ -13,14 +16,37 @@ Even if you gain access to it:
 
 But there is a neat solution. We can leverage the built-in `node:repl` and `node:net` modules.
 ```ts
-// repl_server.ts
 import repl from "node:repl";
 import net, { Socket } from "node:net";
+import readline from "node:readline";
+import util from "node:util";
+import process from "node:process";
 
 const REPL_PORT = 5001;
 const replContextAdditions: Record<string, any> = {};
+const isBun = !!(process.versions as any).bun;
 
 const server = net.createServer((socket: Socket) => {
+  if (isBun) {
+    handleBunRepl(socket);
+  } else {
+    handleNodeRepl(socket);
+  }
+});
+
+server.on("error", (err: Error) => {
+  console.error("Server error:", err);
+});
+
+server.listen(REPL_PORT, () => {
+  console.log(`REPL server running on port ${REPL_PORT} (${isBun ? "Bun" : "Node.js"})`);
+});
+
+export function addToRepl(obj: Record<string, any>) {
+  Object.assign(replContextAdditions, obj);
+}
+
+function handleNodeRepl(socket: Socket) {
   const replServer = repl.start({
     prompt: "> ",
     input: socket,
@@ -29,25 +55,71 @@ const server = net.createServer((socket: Socket) => {
     preview: false,
     useColors: true,
     useGlobal: false,
-  }).on("exit", () => {
+  });
+
+  replServer.on("exit", () => {
     socket.end();
   });
 
   Object.assign(replServer.context, replContextAdditions);
-});
+}
 
-server.on("error", (err: Error) => {
-  console.error("Server error:", err);
-});
+function handleBunRepl(socket: Socket) {
+  const context = { ...replContextAdditions };
 
-server.listen(REPL_PORT, () => {
-  console.log(`REPL server running on port ${REPL_PORT}`);
-});
+  const rl = readline.createInterface({
+    input: socket,
+    output: socket,
+    terminal: true,
+    prompt: "> ",
+    completer: (line: string) => compl(line, context),
+  });
 
-export function addToRepl(obj: Record<string, any>) {
-  Object.assign(replContextAdditions, obj);
+  rl.on("line", (line) => {
+    const trimmed = line.trim();
+    if (!trimmed) return rl.prompt();
+
+    try {
+      // Basic eval implementation for Bun
+      const result = new Function("context", `with(context) { return (${trimmed}) }`)(context);
+      socket.write(util.inspect(result, { colors: true }) + "\n");
+    } catch (err) {
+      socket.write(util.inspect(err, { colors: true }) + "\n");
+    }
+    rl.prompt();
+  });
+
+  rl.on("close", () => socket.end());
+  socket.on("end", () => rl.close());
+
+  rl.prompt();
+}
+
+function compl(line: string, context: any) {
+  try {
+    const ctx = { ...globalThis, ...context };
+    const match = line.match(/^((?:.*[ .(\[])?)([^ .(\[]*)$/);
+    if (!match) return [[], line];
+
+    const [, expr, last] = match;
+    const query = expr.trim().replace(/[. ]+$/, "");
+    const target = query ? new Function("ctx", `with(ctx) { return ${query} }`)(ctx) : ctx;
+
+    if (target == null) return [[], line];
+
+    const keys = new Set<string>();
+    for (let o = target; o; o = Object.getPrototypeOf(o)) {
+      Object.getOwnPropertyNames(o).forEach(k => keys.add(k));
+    }
+
+    const hits = Array.from(keys).filter(k => k.startsWith(last));
+    return [hits.map(h => expr + h), line];
+  } catch {
+    return [[], line];
+  }
 }
 ```
+
 
 Run the `repl_server.ts` and manually add application objects to the context.
 ```typescript
