@@ -14,9 +14,9 @@ Step 2: add a few TODO tasks (obvious, low-hanging fruit that I should pick up n
 # Implement 2FA with SMS
 
 - links to third-party SMS provider |
-- links to Figma designs          |<- my understanding on day 1
-- functional requirement 1        |
-- functional requirement 2        |
+- links to Figma designs            |<- my understanding on day 1
+- functional requirement 1          |
+- functional requirement 2          |
 
 
 # TODO
