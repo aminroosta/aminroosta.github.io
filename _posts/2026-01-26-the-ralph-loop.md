@@ -80,7 +80,7 @@ ralph.md    # the system prompt for the Ralph Loop
 The setup is dead simple. I run `ralph.ts <iterations> .opencode/prd-<name>.md`. The script takes the `ralph.md` system prompt, inlines the paths to `.opencode/prd-<name>.md` and `.opencode/log-<name>.md`, and runs a new OpenCode session.
 It's basically a for loop. The system prompt (`ralph.md`) instructs the LLM to mark the TODO item as complete, append progress to `.opencode/log-<name>.md`, and commit the changes.
 
-<details><summary> full system prompt (click to expand) </summary>
+Here is the full prompt `ralph.md`:
 
 ```md
 # Ralph Agent Instructions
@@ -128,8 +128,6 @@ You are an autonomous coding agent responsible for executing tasks within a soft
 * **Atomic Progress:** Work on **ONE** step at a time and commit frequently.
 * **Excellence:** Strive for high-quality implementation in every iteration.
 ```
-
-</details>
 
 {% graphviz %}
 digraph RalphInternal {
