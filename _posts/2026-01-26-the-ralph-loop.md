@@ -6,9 +6,9 @@ categories: [tools, llm]
 ---
 
 The [Ralph Loop](https://ghuntley.com/loop/) has completely changed how I write software. For over a decade, my workflow for implementing a feature looked like this:
-Step 1: write a tech spec (maybe informal; maybe just a Markdown file in [Vimwiki](https://github.com/vimwiki/vimwiki)).
-Step 2: add a few TODO tasks (obvious, low-hanging fruit that I should pick up next).
 
+- Step 1: write a tech spec (maybe informal; maybe just a Markdown file in [Vimwiki](https://github.com/vimwiki/vimwiki)).
+- Step 2: add a few TODO tasks (obvious, low-hanging fruit that I should pick up next).
 
 ```md
 # Implement 2FA with SMS
@@ -24,8 +24,9 @@ Step 2: add a few TODO tasks (obvious, low-hanging fruit that I should pick up n
 - [ ] Add a `POST /v1/sms/pin` API       |<- low-hanging fruit
 ```
 
-Step 3: implement the **TODO** items
-Step 4: think about what to do next
+- Step 3: implement the **TODO** items.
+- Step 4: think about what to do next.
+
 Go back to step 3 and repeat until the project is complete.
 
 The way I use the Ralph Loop now isn't too different from that approach; the key difference is that the **TODO**s are done by LLMs (GPT-5.2 (xhigh) or Opus 4.5 (max)).
