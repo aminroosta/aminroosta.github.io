@@ -203,7 +203,7 @@ digraph RalphRunner {
   node  [fontname="Helvetica,Arial,sans-serif", fontsize=10, margin="0.1,0.05", penwidth=1.2]
   edge  [fontname="Helvetica,Arial,sans-serif", fontsize=8, color="#0b122055", arrowsize=0.6]
 
-  start [label="ralph.ts", shape=circle, style=filled, fillcolor="#7b4397:#dc2430", fontcolor="white", width=0.6, fixedsize=true]
+  start [label="ralph.ts", shape=circle, style=filled, fillcolor="#7b4397:#dc2430", fontcolor="blue", width=0.6, fixedsize=true]
 
   parse [label="Parse args\n(port, iterations, PRD)", shape=box, style="filled,rounded", fillcolor="#fdfbfb", color="#0f172a33"]
   
