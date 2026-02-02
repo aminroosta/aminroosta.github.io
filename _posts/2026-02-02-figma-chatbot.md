@@ -7,13 +7,12 @@ categories: [tools, llm, figma]
 
 <img src="/assets/images/figma-chatbot-help.png" width="720" alt="figma-chatbot in action" />  
 
-The [Figma MCP server](https://help.figma.com/hc/en-us/articles/32132100833559-Guide-to-the-Figma-MCP-server) is a decent, **read-only** way to integrate Figma with Claude Code. It's good for frontend development, but it cannot do the thing designers often want: apply changes.
-Most design work has a bunch of small, repetitive chores: rename layers, nudge spacing, normalize corner radii, etc.
+The [Figma MCP server](https://help.figma.com/hc/en-us/articles/32132100833559-Guide-to-the-Figma-MCP-server) is decent **read-only** way to integrate Figma with Claude code. It's good for frontend development, but it make changes inside Figma.
 
-So I built [figma-chatbot](https://github.com/aminroosta/figma-chatbot): a local bridge that lets Claude execute JavaScript inside a running Figma Desktop document, using the normal Figma plugin API. That makes prompts like "change the button color to red" possible.
+I wanted something for small, repetitive chores: rename layers, nudge spacing normalize corner radius, etc. So I built [figma-chatbot](https://github.com/aminroosta/figma-chatbot): a local bridge that lets Claude execute JavaScript inside a running Figma Desktop document, using the Figma plugin API. That makes prompts like "change the button color to red" possible.
 
 
-## How `figma-chatbot` Works (High-Level)
+## How It Works
 
 There are two parts, both running locally:
 
@@ -24,19 +23,13 @@ The bridge is only there to connect Claude to the Figma plugin runtime.
 
 {% graphviz %}
 digraph FigmaChatbot {
-  graph [rankdir=LR, fontname="Helvetica,Arial,sans-serif", nodesep=0.4, ranksep=0.6, bgcolor=transparent]
+  graph [ fontname="Helvetica,Arial,sans-serif", nodesep=0.4, ranksep=0.6, bgcolor=transparent]
   node  [fontname="Helvetica,Arial,sans-serif", fontsize=11, margin="0.16,0.1", penwidth=1.2]
   edge  [fontname="Helvetica,Arial,sans-serif", fontsize=9, color="#0b122055", fontcolor="#0b1220cc", arrowsize=0.7]
 
-  you    [label="You\n(Designer)", shape=box, style="filled,rounded", fillcolor="#fdfbfb", color="#0f172a33"]
+  you    [label="You", shape=box, style="filled,rounded", fillcolor="#fdfbfb", color="#0f172a33"]
   claude [label="Claude Code\n(/fig:go)", shape=box, style="filled,rounded", fillcolor="#fdfbfb", color="#0f172a33"]
 
-  subgraph cluster_local {
-    label="On your machine"
-    style="rounded,filled"
-    fillcolor="#fffbeb"
-    color="#a1620755"
-    fontcolor="#a16207"
 
     bridge [label="Local bridge\n(ws://127.0.0.1:7017)", shape=box, style="filled,rounded", fillcolor="#a1c4fd:#c2e9fb", color="#0284c733"]
     ui     [label="Figma plugin UI\n(WebSocket client)", shape=box, style="filled,rounded", fillcolor="#fdfbfb", color="#0f172a33"]
@@ -49,11 +42,15 @@ digraph FigmaChatbot {
     doc -> main    [label="result"]
     main -> ui     [label="eval_response"]
     ui -> bridge   [label="response"]
-  }
+ 
 
   you -> claude    [label="describe the change"]
   claude -> bridge [label="send JS"]
   bridge -> claude [label="logs + result"]
+  
+  {rank=same; you; claude}
+  {rank=same; bridge; ui}
+  {rank=same; main; doc}
 }
 {% endgraphviz %}
 
@@ -98,18 +95,5 @@ Once the bridge is running, prompts like this become possible:
 - "Find every instance of Button, make the fill red, and align the padding across variants."
 - "Prefix everything on this page with Marketing/, except frames that already have a prefix."
 - "Rename these layers with a clean scheme, then center the viewport on them."
-
-Under the hood, `figma-chatbot` evaluates JavaScript inside the plugin context (so it can call `figma.*` to make edits).
-
-The bridge simply evaluates JS snippets like this (sent by Claude):
-
-```sh
-bun ${CLAUDE_PLUGIN_ROOT}/figma.ts eval <<'EOF'
-console.log("selection size", figma.currentPage.selection.length)
-return { ok: true }
-EOF
-```
-
----
 
 If you want to try it (or skim the code), the repo is here: https://github.com/aminroosta/figma-chatbot
