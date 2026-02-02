@@ -5,7 +5,7 @@ date: 2026-02-02
 categories: [tools, llm, figma]
 ---
 
-The [Figma MCP server](https://help.figma.com/hc/en-us/articles/32132100833559-Guide-to-the-Figma-MCP-server) is decent **read-only** way to integrate Figma with Claude code. It's good for frontend development, but it make changes inside Figma.
+The [Figma MCP server](https://help.figma.com/hc/en-us/articles/32132100833559-Guide-to-the-Figma-MCP-server) is a decent **read-only** way to integrate Figma with Claude code. It's good for frontend development, but it can't make changes inside Figma.
 
 I wanted something for small, repetitive chores: rename layers, nudge spacing normalize corner radius, etc. So I built [figma-chatbot](https://github.com/aminroosta/figma-chatbot): a local bridge that lets Claude execute JavaScript inside a running Figma Desktop document, using the Figma plugin API. That makes prompts like "change the button color to red" possible.
 
@@ -97,4 +97,4 @@ Once the bridge is running, prompts like this become possible:
 - "Rename these layers with a clean scheme, then center the viewport on them."
 
 <br/>
-If you want to try it, the repo is here: [https://github.com/aminroosta/figma-chatbot](https://github.com/aminroosta/figma-chatbo)
+If you want to try it, the repo is here: [https://github.com/aminroosta/figma-chatbot](https://github.com/aminroosta/figma-chatbot)
