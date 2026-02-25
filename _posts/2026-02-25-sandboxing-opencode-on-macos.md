@@ -1,31 +1,23 @@
 ---
 layout: post
-title: "Sandboxing OpenCode on macOS"
+title: "Sandboxing opencode on macOS"
 date: 2026-02-25
 categories: [tools, llm, security, macos]
 ---
 
 This post shows how I run the `opencode` CLI inside a macOS sandbox using [sandbox-exec](https://reverse.put.as/wp-content/uploads/2011/09/Apple-Sandbox-Guide-v1.0.pdf), with a tight file/process allowlist and a clean environment.
 
-Repo (the exact files I use):
+Repo (the exact files I use): [github.com/aminroosta/opencode-sandbox](https://github.com/aminroosta/opencode-sandbox)
+- deny home directory reads/writes by default.
+- deny `process-exec` by default.
+- start with an empty environment (`env -i`).
 
-- https://github.com/aminroosta/opencode-sandbox
-
-
-## What This Gives You
-
-- deny home directory reads/writes by default; allow only `~/dev` (and a few app state dirs).
-- deny `process-exec` by default; allow only known toolchain paths.
-- start with an empty environment (`env -i`) and forward only a small set of env variables.
-
-
-## How It Works
 
 There are three layers:
 
-1) `opencode-sandbox` (a tiny wrapper script)
-2) `opencode-dev-only.sb` (a sandbox profile)
-3) `~/.config/opencode/opencode.json` (OpenCode config defaults)
+1. `opencode-sandbox` (a tiny wrapper script)  
+2. `opencode-dev-only.sb` (a sandbox profile)  
+3. `~/.config/opencode/opencode.json` (OpenCode config defaults)  
 
 
 ## The Wrapper Script
@@ -76,8 +68,8 @@ That `OPENCODE_DISABLE_*` list is intentional: fewer downloads and fewer backgro
 
 Two important rules:
 
-1) **Deny writes globally** (then allow writes only where needed)
-2) **Deny reads of your home directory** (then allow reads only where needed)
+1. **Deny writes globally** (then allow writes only where needed)  
+2. **Deny reads of your home directory** (then allow reads only where needed)  
 
 Key lines (trimmed):
 
